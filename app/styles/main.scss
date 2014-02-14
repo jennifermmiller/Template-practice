@@ -115,6 +115,7 @@ body {
         margin-bottom: 10px;
         height: 60px;
         line-height: 60px;
+        box-shadow: 0px 0px 1px;
         @include border-radius (6px);
     }
 
@@ -166,6 +167,25 @@ body {
                 padding: 12px 10px;
             }
 
+            .edit-description{
+                    display: none;
+                    position: absolute;
+                    margin-top: -46px;
+                    padding: 5px;
+                    background: $off-white;
+                    width: 61%;
+                    @include border-radius(6px);
+                
+                .edit-input{
+                    color: $drk-blue;
+                    background: $off-white;
+                    border: none;
+                    box-shadow: none;
+                    padding: 0 5px;
+                    font-size: 16px;
+                }
+            }
+
             button{
                 background: $drk-blue;
                 color: $off-white;
@@ -190,9 +210,12 @@ body {
             }
 
             &.complete{
+                background: #4D6E53;
+
                 .item-description{
                 text-decoration: line-through;
                 font-weight: 100;
+                background: #4D6E53;
                 }
 
                 .glyphicon-ok,
@@ -261,6 +284,7 @@ body {
                 background: $drk-blue;
                 @include border-radius (6px);
                 padding: 3px;
+                cursor: pointer;
             }
         }
     }  

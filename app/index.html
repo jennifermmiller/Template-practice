@@ -71,6 +71,9 @@
         <script type="text/template" class="item-template">
             <div class="list-item" id='<%= uniqueID %>'>
                 <div class="js-item-description item-description"><%=description%></div>
+                <div class="js-edit-description edit-description" data-keyboard="true" >
+                    <input type="text" class="js-edit-input edit-input form-control" value="<%=description%>"/>
+                </div>
                 
                 <button type="button" class="js-complete-btn btn btn-default btn-sm">
                   <span class="glyphicon glyphicon-ok"></span>
