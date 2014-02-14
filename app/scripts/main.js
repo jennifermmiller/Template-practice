@@ -1,128 +1,138 @@
 console.log('Take: 327,820,965,434');
 
-//Declare variables:
-var itemTemplate,
-	todoList,
-	userInput,
-	completedTodo,
-	completedArray,
-	itemCount,
-	removeComplete;
+//Template(s):
+var itemTemplate = _.template($('.item-template').text());
 
-//Templates:
-itemTemplate = _.template($('.item-template').text());
-
-//Flesh out constructor:
+//Constructor:
 function TodoItem (options) {
 	options = options || {};
 	this.description = options.description;
 	this.complete = false;
 	this.uniqueID = _.uniqueId('todo-');
-};
+}
 
-todoArray = [];
-completedArray = [];
+var todoArray = [];
 
 //Functions:
-itemCount = function(){
-	var itemsTotal = todoArray.length;
+var itemCount = function(){
+	var pendingArray = _.where(todoArray, {complete: false});
+	var completedArray = _.where(todoArray, {complete: true});
+
 	var itemsComplete = completedArray.length;
-	var itemsPending = itemsTotal - itemsComplete;
+	var itemsPending = pendingArray.length;
 
-	$('.js-todo-left').text('Item Count: ' + itemsTotal);
-	$('.js-completed-clear').text('Clear Completed: ' + itemsComplete);
-
+	$('.js-todo-left').empty().text('Item Count: ' + itemsPending);
+	$('.js-completed-clear').empty().text('Clear Completed: ' + itemsComplete);
 };
 
-//add! click:
+
 $(document).ready(function(){
-	//What happens when the add btn is clicked:
+	//Add btn:
 	$('.js-add-btn').click(function(){
-		
-		//Save user data
-		userInput = {
-			description: $('.js-description-input').val()
-		};
-				
-		todoArray.push(new TodoItem(userInput));
+		if (($('.js-description-input').val()) !== '') {
+			var userInput = {
+				description: $('.js-description-input').val()
+			};
+			todoArray.push(new TodoItem(userInput));
 
-		//Clear list-item div
-		$('.list-items').html('');
+			$('.list-items').html('');
+			_.each(todoArray, function(item) {
+				$('.list-items').prepend(itemTemplate(item));
+			});
+			$('.js-description-input').val('');
 
-		//Iterate through todoArray to create list
-		_.each(todoArray, function(item, index) {
-			$('.list-items').prepend(itemTemplate(item));
-		});
-
-		//Clear input field
-		$('.js-description-input').val('');
-
-		//Update item count:
-		itemCount();
+			itemCount();
+		}
 	});
 
 	//Complete btn:
-	$('.list-items').on('click', '.js-complete-btn', function(){
-		//Show physical traits of complete:
-		$(this).parent().toggleClass('complete');
+	//Broken :( ... only works if it just has one task.
+	//Somehow need a seperate tracker for each complete btn ...or, a different way to do this!		 
+	var track = true;
+	$('.list-items').on('click', '.js-complete-btn', function(event){
+		event.preventDefault();
+		
+		var findParent = $(this).parent();
+		var completedTodo = _.findWhere(todoArray, {uniqueID: (findParent).attr('id')});
 
-		//Find corresponding parent:
-		completedTodo = _.findWhere(todoArray, {uniqueID: $(this).parent().attr('id')});
+		var completeIsTrue = function() {
+			(findParent).addClass('complete');
+			_.each(todoArray, function(item){
+				if(item.uniqueID === completedTodo.uniqueID) {
+					item.complete = true;
+				}
+			});
+		};
 
-		//Remove completed item from todoArray and add it to completed array
-		//Need to somehow be able to toggle this as well...separate click events perphaps?
-		_.each(todoArray, function(item, index){
-			if(item.uniqueID == completedTodo.uniqueID) {
-				if( $(completedTodo).prop('complete') == false) {
-					$(completedTodo).prop('complete', true);
-				} 
+		var completeIsFalse = function() {
+			(findParent).removeClass('complete');
+			_.each(todoArray, function(item){
+				if(item.uniqueID === completedTodo.uniqueID) {
+					item.complete = false;
+				}
+			});
+		};
+		
+		if (track) {
+			completeIsTrue();
+		} else {
+			completeIsFalse();
+		}
 
-				todoArray = _.reject(todoArray, function(item){
-					return item.uniqueID == completedTodo.uniqueID;
-				});
+		track = !track;
 
-				completedArray.push(completedTodo);
-			}
-		});
-
-		//Update item count:
 		itemCount();
 	});
 
+	//Edit btn:
+
+		
 	//Remove btn:
 	$('.list-items').on('click', '.js-remove-btn', function(){
-		//Visibly remove from page:
+		var removeTodo = _.findWhere(todoArray, {uniqueID: $(this).parent().attr('id')});
 		$(this).parent().remove();
-
-		//Find corresponding parent:
-		removeTodo = _.findWhere(todoArray, {uniqueID: $(this).parent().attr('id')})
-		
-		//Remove item from todoArray:
 		todoArray = _.reject(todoArray, function(item){
-			return item.uniqueID == removeTodo.uniqueID;
+			return item.uniqueID === removeTodo.uniqueID;
 		});
-
-		//Update item count:
 		itemCount();
 	});
 
-
-	//Ignoring edit, for now....
-
-	//To clear completed tasks:
-	$('.trackers').on('click', '.js-completed-clear', function(){
+	//Show all:
+	$('.trackers').on('click', '.js-todo-all', function(){
+		$('.list-items').html('');
+		_.each(todoArray, function(item) {
+			$('.list-items').prepend(itemTemplate(item));
+		});
 		
-		removeComplete = _.findWhere(todoArray, {complete: $(this.parent().prop('complete') == true)});
+	});
 
-		// _.each(todoArray, function(item, index) {
-			
-		// 	}
-		// });
-	})
+	//Show only active:
+	$('.trackers').on('click', '.js-todo-active', function(){
+		var activeArray = _.where(todoArray, {complete: false});
+		//$('.list-items').html('');
+		_.each(activeArray, function(item) {
+			$('.list-items').prepend(itemTemplate(item));
+		});
+	});
 
+	//Show only completed:
+	$('.trackers').on('click', '.js-todo-completed', function(){
+		var completeArray = _.where(todoArray, {complete: true});
+		$('.list-items').html('');
+		_.each(completeArray, function(item) {
+			$('.list-items').prepend(itemTemplate(item));
+		});
+	});
 
-
-
-
-
+	//Clear completed tasks:
+	$('.trackers').on('click', '.js-completed-clear', function(){
+		todoArray = _.reject(todoArray, function(item){
+			return item.complete === true;
+		});
+		$('.list-items').html('');
+		_.each(todoArray, function(item) {
+			$('.list-items').prepend(itemTemplate(item));
+		});
+		itemCount();
+	});
 });

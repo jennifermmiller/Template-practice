@@ -2,6 +2,7 @@ $icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 
 @import 'compass/css3';
 @import 'sass-bootstrap/lib/bootstrap';
+$icon-font-path: "/bower_components/sass-bootstrap/fonts/";
 
 //Colors:
 $salmon: #d95f47;
@@ -48,7 +49,7 @@ body {
 .footer {
     padding-top: 19px;
     color: #777;
-    border-top: 1px solid #e5e5e5;
+    float: right;
 }
 
 .container-narrow > hr {
@@ -111,92 +112,156 @@ body {
         color: $lite-grn;
         font-size: 24px;
         border: none;
-        @include border-radius (6px 6px 0 0);
-    }
-
-    input{
+        margin-bottom: 10px;
         height: 60px;
-        font-size: 18px;
-        background: $off-white;
-        color: $drk-blue;
-        @include border-radius (0);
+        line-height: 60px;
+        @include border-radius (6px);
     }
 
+    .list-body{
+        box-shadow: 1px 1px 2px;
+
+        .input-group{
+            border-bottom: 1px solid $drk-blue;
+
+            input{
+                height: 60px;
+                font-size: 18px;
+                background: $off-white;
+                color: $drk-blue;
+                border-bottom: none;
+                border-right: 1px solid $drk-blue;
+                @include border-radius (6px 0 0 0);
+            }
 
 
-    .add-btn{
-        padding: 16px 16px 17px;
-        background: $salmon;
-        font-size: 18px;
-        @include border-radius (0);
-    }
 
-    .list-item{
-        font-size: 18px;
-        background: $lite-grn;
-        padding: 10px;
-        border-top: 1px solid $drk-blue;
-   
-        &:first-child{
-            border: none;
-        }
-        
-        .item-description{
-            width: 70%;
-            display: inline-block;
-            background: $lite-grn;
-            color: $drk-blue;
-            font-size: 18px;
-            padding: 15px 10px;
-        }  
-
-        &:last-child{
-            @include border-radius(0 0 6px 6px);
-        }
-
-        &.complete{
-            .item-description{
-            text-decoration: line-through;
+            .add-btn{
+                padding: 17px 16px 18px;
+                background: $salmon;
+                font-size: 18px;
+                border: none;
+                border-left: 1px solid $drk-blue;
+                @include border-radius (0 6px 0 0);
             }
         }
+        
+        .list-item{
+            font-size: 18px;
+            background: $lite-grn;
+            padding: 5px;
+            border-top: 1px solid $drk-blue;
+            height: 60px;
+       
+            &:first-child{
+                border: none;
+            }
+            
+            .item-description{
+                width: 70%;
+                display: inline-block;
+                background: $lite-grn;
+                color: $drk-blue;
+                font-size: 18px;
+                padding: 12px 10px;
+            }
+
+            button{
+                background: $drk-blue;
+                color: $off-white;
+                border: none;
+                box-shadow: 1px 1px;
+                
+                .glyphicon-ok{
+                    color: #3df221;
+                }
+
+                .glyphicon-pencil{
+                    color: #ffdb11;
+                }
+
+                .glyphicon-remove{
+                    color: red;
+                }
+            }
+
+            &:last-child{
+                @include border-radius(0 0 6px 6px);
+            }
+
+            &.complete{
+                .item-description{
+                text-decoration: line-through;
+                font-weight: 100;
+                }
+
+                .glyphicon-ok,
+                .glyphicon-pencil,
+                .glyphicon-remove{
+                    color: $off-white;
+                }
+
+                 .glyphicon-ok:hover{
+                    color: #3df221;
+                }
+
+                .glyphicon-pencil:hover{
+                    color: #ffdb11;
+                }
+
+                .glyphicon-remove:hover{
+                    color: red;
+                }
+            }
+        }
+               
     }
+       
     .trackers {
         padding-top: 10px;
 
         .items-left,
         .options,
-        .clear {
+        .clear{
             display: inline-block;
         }
 
-        .items-left,
-        .clear {
-            width: 100px;
+        .items-left{
+            width: 90px;
+            color: $off-white;
         }
 
         .options{
-            width: 176px;
+            width: 175px;
         }
 
-        .options ul {
+        .options ul{
             list-style: none;
+            padding: 5px 0;
+            width: 201px;
 
             li{
                 display: inline;
             }
+
+            button{
+                background: $salmon;
+                color: $drk-blue;
+                border: none;
+                box-shadow: 1px 1px;
+            }
         }
 
         .clear{
-            float: right;
+            margin-left: 25px;
+            width: 130px;
+            color: $off-white;
 
             &:hover {
-                background: $lite-grn;
+                background: $drk-blue;
+                @include border-radius (6px);
+                padding: 3px;
             }
         }
-    }
-
-
-
-
-
+    }  
 }
