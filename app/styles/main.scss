@@ -158,6 +158,15 @@ body {
                 border: none;
             }
             
+            .complete-description{
+                display: none;
+                position: absolute;
+                background: rgba(50,50,50,.2);
+                height: 60px;
+                margin: -5px;
+                width: 434px;
+                }
+
             .item-description{
                 width: 70%;
                 display: inline-block;
@@ -210,12 +219,10 @@ body {
             }
 
             &.complete{
-                background: #4D6E53;
 
                 .item-description{
                 text-decoration: line-through;
                 font-weight: 100;
-                background: #4D6E53;
                 }
 
                 .glyphicon-ok,

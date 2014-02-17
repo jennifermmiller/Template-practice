@@ -1,10 +1,9 @@
 console.log('Take: 327,820,965,434');
 //Current problems:  
 //todos losing complete class when toggling between lists
-//Stupid f-ing complete btn/edit btn...somehow both need to do two things
+//Better way to do the lists?
+//Stupid complete btn/edit btn...somehow both need to do two things
 //maybe make edit submit w/ enter keypress
-//background on complete status?
-
 
 //Template(s):
 var itemTemplate = _.template($('.item-template').text());
@@ -12,7 +11,7 @@ var itemTemplate = _.template($('.item-template').text());
 //Constructor:
 function TodoItem (options) {
 	options = options || {};
-	this.description = options.description;
+	this.description = options.description || 'No task? That\'s not helpful!';
 	this.complete = false;
 	this.uniqueID = _.uniqueId('todo-');
 }
@@ -53,13 +52,15 @@ $(document).ready(function(){
 		},
 		mouseleave: function(){
 			$(this).blur();
-		}		
+		}
 	});
 
 	$('.js-add-btn').click(function(){
 		if (($('.js-description-input').val()) !== '') {
 			addNewTodo();
 			itemCount();
+		} else {
+			throw new Error('You must enter a todo item.');
 		}
 	});
 
@@ -67,44 +68,31 @@ $(document).ready(function(){
 		if(buttonPress.which === 13 && $(this).val !==('')){
 			addNewTodo();
 			itemCount();
-		} 
+		} else {
+			throw new Error('You must enter a todo item.');
+		}
 	});
 
 	//Complete btn:
-	//Broken :( ... only works if it just has one task.
+	//Broken :( 
 	//Somehow need a seperate tracker for each complete btn ...or, a different way to do this!		 
-	var track = true;
-	$('.list-items').on('click', '.js-complete-btn', function(event){
-		event.preventDefault();
-		
-		var findParent = $(this).closest('.list-item');
-		var completedTodo = _.findWhere(todoArray, {uniqueID: (findParent).attr('id')});
+	//A solution...but not exactly what I wanted to do
+	$('.list-items').on('click', '.js-complete-btn', function(){
+		$(this).siblings('.complete-description').show();
+		$(this).parent().addClass('complete');
 
-		var completeIsTrue = function() {
-			(findParent).addClass('complete');
-			_.each(todoArray, function(item){
-				if(item.uniqueID === completedTodo.uniqueID) {
-					item.complete = true;
-				}
-			});
-		};
+		var completedTodo = _.findWhere(todoArray, {uniqueID: $(this).parent().attr('id')});
+		completedTodo.complete = true;
 
-		var completeIsFalse = function() {
-			(findParent).removeClass('complete');
-			_.each(todoArray, function(item){
-				if(item.uniqueID === completedTodo.uniqueID) {
-					item.complete = false;
-				}
-			});
-		};
-		
-		if (track) {
-			completeIsTrue();
-		} else {
-			completeIsFalse();
-		}
+		itemCount();
+	});
+			
+	$('.list-items').on('click', '.complete-description', function(){
+		$(this).hide();
+		$(this).parent().removeClass('complete');
 
-		track = !track;
+		var incompleteTodo = _.findWhere(todoArray, {uniqueID: $(this).parent().attr('id')});
+		incompleteTodo.complete = false;
 
 		itemCount();
 	});
@@ -116,47 +104,21 @@ $(document).ready(function(){
 	});
 
 	$('.list-items').on('dblclick', '.item-description', function(){
-			$(this).siblings('.js-edit-description').show();
-			$(this).siblings().children('.js-edit-input').focus();	
+		$(this).siblings('.js-edit-description').show();
+		$(this).siblings().children('.js-edit-input').focus();
 	});
 
-	//Back to same problem as complete...how to do something different on every other click?!?
+	//Using blur for now...Back to same problem as complete...how to do something different on every other click?!?
 	$('.list-items').on('blur', '.js-edit-input', function(){
 		var target = $(this);
 
-		var parentLocation = (target).parent().parent().attr('id');
 		var newDescription = (target).val();
 
-		_.each(todoArray, function(item){
-			if(item.uniqueID === parentLocation.uniqueID) {
-				item.description === newDescription;
-			}
-		});
-
+		var completedTodo = _.findWhere(todoArray, {uniqueID: (target).closest('.list-item').attr('id')});
+		completedTodo.description = newDescription;
+		
 		(target).parent().siblings('.item-description').empty().html(newDescription);
 		(target).parent().hide();
-	});
-
-	$('.js-edit-input').on('keypress', function(buttonPress){
-		if(buttonPress.which === 13) {
-			event.preventDefault();
-			
-			var target = $(this);
-
-			var parentLocation = (target).parent().parent().attr('id');
-			var newDescription = (target).val();
-
-			_.each(todoArray, function(item){
-				if(item.uniqueID === parentLocation.uniqueID) {
-					item.description === newDescription;
-				}
-			});
-
-			(target).parent().siblings('.item-description').empty().html(newDescription);
-			(target).parent().hide();
-
-			return false;
-		}
 	});
 		
 	//Remove btn:
