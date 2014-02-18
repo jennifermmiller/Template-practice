@@ -3,17 +3,12 @@ var tempModel = {
 	description:'Take a nap. I\'m sleepy!',
 	complete: false,
 	uniqueID: _.uniqueId('todo-')
-}
-var tempModel2 = {
-	description:'Take a nap. I\'m sleepy!',
-	complete: false,
-	uniqueID: _.uniqueId('todo-')
-}
+};
 
 //Backbone model that let's us do cool stuff:
 var Todo = Backbone.Model.extend();
 
-//Backbone view setup:
+//Backbone view setup for each todo item:
 var TodoView = Backbone.View.extend({
 	className: 'list-item',
 
@@ -21,9 +16,14 @@ var TodoView = Backbone.View.extend({
 
 
 	events: {
-		"click .js-complete-btn" : "toggleComplete",
-		"click .js-remove-btn" : "removeTodo",
-		"click .js-edit-btn" : "edit"
+		'click .js-complete-btn' : 'toggleComplete',
+		'click .js-remove-btn' : 'clear',
+		// 'click .js-edit-btn' : 'edit',
+		'dblclick .js-item-description' : 'edit',
+
+		//May need to alter these two:
+		'keypress .js-edit-description ' : 'updateOnEnter',
+		'blur .js-edit-description' : 'close'
 	},
 
 	initialize: function(){
@@ -31,6 +31,7 @@ var TodoView = Backbone.View.extend({
 		this.render();
 
 		this.listenTo(this.model, 'change', this.render);
+		this.listenTo(this.model, 'destroy', this.remove);
 	},
 
 	render: function(){
@@ -42,17 +43,44 @@ var TodoView = Backbone.View.extend({
 		this.$el.toggleClass('completeClass');
 	},
 
-	removeTodo: function(){
-		view.remove()
+	clear: function(){
+		this.model.destroy();
 	},
 
 	// edit: function(){
 	// 	this.$el.addClass('edit-description');
 	// }
-})
+});
 
 var modelInstance = new Todo(tempModel);
 var view = new TodoView({model: modelInstance});
 
-var instTwo = new Todo(tempModel2);
-var view = new TodoView({model: instTwo});
+
+//In order to setup add btn...I think we might need a collection?
+// var AppView = Backbone.View.extend({
+// 	el: $('.app-space'),
+
+// 	events: {
+// 		'click .js-add-btn' : 'createNewItem',
+// 	},
+
+// 	initialize: function(){
+// 		this.input = this.$('.js-description-input');
+
+// 		this.listenTo(Todos)
+// 	}
+// })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
