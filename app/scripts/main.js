@@ -19,7 +19,7 @@ function TodoItem (options) {
 var todoArray = [];
 
 //Functions:
-var itemCount = function(){
+function itemCount(){
 	var pendingArray = _.where(todoArray, {complete: false});
 	var completedArray = _.where(todoArray, {complete: true});
 
@@ -30,7 +30,7 @@ var itemCount = function(){
 	$('.js-completed-clear').empty().text('Clear Completed: ' + itemsComplete);
 };
 
-var addNewTodo = function(){
+function addNewTodo(){
 	var userInput = {
 		description: $('.js-description-input').val()
 	};

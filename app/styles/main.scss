@@ -150,22 +150,13 @@ body {
         .list-item{
             font-size: 18px;
             background: $lite-grn;
-            padding: 5px;
+            padding-top: 5px;
             border-top: 1px solid $drk-blue;
             height: 60px;
        
             &:first-child{
                 border: none;
             }
-            
-            .complete-description{
-                display: none;
-                position: absolute;
-                background: rgba(50,50,50,.2);
-                height: 60px;
-                margin: -5px;
-                width: 434px;
-                }
 
             .item-description{
                 width: 70%;
@@ -218,9 +209,9 @@ body {
                 @include border-radius(0 0 6px 6px);
             }
 
-            &.complete{
+            &.completeClass{
 
-                .item-description{
+                .item-description{   
                 text-decoration: line-through;
                 font-weight: 100;
                 }

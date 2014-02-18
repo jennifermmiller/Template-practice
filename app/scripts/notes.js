@@ -1,25 +1,58 @@
+//temp todo model - until we learn more
+var tempModel = {
+	description:'Take a nap. I\'m sleepy!',
+	complete: false,
+	uniqueID: _.uniqueId('todo-')
+}
+var tempModel2 = {
+	description:'Take a nap. I\'m sleepy!',
+	complete: false,
+	uniqueID: _.uniqueId('todo-')
+}
 
-//Original complete idea:
-//Show physical traits of complete:
-		// $(this).parent().toggleClass('complete');
+//Backbone model that let's us do cool stuff:
+var Todo = Backbone.Model.extend();
 
-		// //Find corresponding parent:
-		// completedTodo = _.findWhere(todoArray, {uniqueID: $(this).parent().attr('id')});
+//Backbone view setup:
+var TodoView = Backbone.View.extend({
+	className: 'list-item',
 
-		// //Remove completed item from todoArray and add it to completed array
-		// //Need to somehow be able to toggle this as well...separate click events perphaps?
-		// _.each(todoArray, function(item, index){
-		// 	if(item.uniqueID == completedTodo.uniqueID) {
-		// 		if( $(completedTodo).prop('complete') == false) {
-		// 			$(completedTodo).prop('complete', true);
-		// 		}
+	renderTemplate: _.template($('.item-template').text()),
 
-		// 		todoArray = _.reject(todoArray, function(item){
-		// 			return item.uniqueID == completedTodo.uniqueID;
-		// 		});
 
-		// 		completedArray.push(completedTodo);
-		// 	}
-		// });
+	events: {
+		"click .js-complete-btn" : "toggleComplete",
+		"click .js-remove-btn" : "removeTodo",
+		"click .js-edit-btn" : "edit"
+	},
 
-		// //Update item count:
+	initialize: function(){
+		$('.list-items').prepend(this.el);
+		this.render();
+
+		this.listenTo(this.model, 'change', this.render);
+	},
+
+	render: function(){
+		this.$el.html(this.renderTemplate(this.model.attributes));
+	},
+
+	toggleComplete: function(event){
+		this.model.set('complete', !this.model.get('complete'));
+		this.$el.toggleClass('completeClass');
+	},
+
+	removeTodo: function(){
+		view.remove()
+	},
+
+	// edit: function(){
+	// 	this.$el.addClass('edit-description');
+	// }
+})
+
+var modelInstance = new Todo(tempModel);
+var view = new TodoView({model: modelInstance});
+
+var instTwo = new Todo(tempModel2);
+var view = new TodoView({model: instTwo});
