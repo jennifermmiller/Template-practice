@@ -68,9 +68,7 @@ $(document).ready(function(){
 		if(buttonPress.which === 13 && $(this).val !==('')){
 			addNewTodo();
 			itemCount();
-		} else {
-			throw new Error('You must enter a todo item.');
-		}
+		} 
 	});
 
 	//Complete btn:
