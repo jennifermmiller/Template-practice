@@ -209,6 +209,15 @@ body {
                 @include border-radius(0 0 6px 6px);
             }
 
+            .complete-item{
+                display: none;
+                background: rgba(50, 50,50,.2);
+                width: 433px;
+                height: 60px;
+                position: absolute;
+                margin-top: -5px;
+            }
+
             &.completeClass{
 
                 .item-description{   

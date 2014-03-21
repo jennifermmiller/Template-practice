@@ -74,8 +74,8 @@ $(document).ready(function(){
 	//Somehow need a seperate tracker for each complete btn ...or, a different way to do this!		 
 	//A solution...but not exactly what I wanted to do
 	$('.list-items').on('click', '.js-complete-btn', function(){
-		$(this).siblings('.complete-description').show();
-		$(this).parent().addClass('complete');
+		$(this).siblings('.complete-item').show();
+		$(this).parent().addClass('completeClass');
 
 		var completedTodo = _.findWhere(todoArray, {uniqueID: $(this).parent().attr('id')});
 		completedTodo.complete = true;
@@ -83,9 +83,9 @@ $(document).ready(function(){
 		itemCount();
 	});
 			
-	$('.list-items').on('click', '.complete-description', function(){
+	$('.list-items').on('click', '.complete-item', function(){
 		$(this).hide();
-		$(this).parent().removeClass('complete');
+		$(this).parent().removeClass('completeClass');
 
 		var incompleteTodo = _.findWhere(todoArray, {uniqueID: $(this).parent().attr('id')});
 		incompleteTodo.complete = false;
