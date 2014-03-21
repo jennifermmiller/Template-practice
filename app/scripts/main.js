@@ -59,8 +59,6 @@ $(document).ready(function(){
 		if (($('.js-description-input').val()) !== '') {
 			addNewTodo();
 			itemCount();
-		} else {
-			throw new Error('You must enter a todo item.');
 		}
 	});
 
